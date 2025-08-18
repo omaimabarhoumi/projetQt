@@ -1,4 +1,4 @@
-QT       += core gui sql printsupport charts network
+QT       += core gui  sql multimedia multimediawidgets printsupport charts widgets axcontainer network printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,17 +18,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     clients.cpp \
     commandes.cpp \
-    connexion.cpp \
-    livreurs.cpp \
+    connection.cpp \
+    employer.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    message.cpp
 
 HEADERS += \
     clients.h \
     commandes.h \
-    connexion.h \
-    livreurs.h \
-    mainwindow.h
+    connection.h \
+    employer.h \
+    mainwindow.h \
+    message.h
 
 FORMS += \
     mainwindow.ui
@@ -37,3 +39,9 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    res.qrc
+
+
+

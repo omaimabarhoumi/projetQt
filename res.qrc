@@ -1,0 +1,40 @@
+<RCC>
+    <qresource prefix="/emp">
+        <file>images/theme/sun.ico</file>
+        <file>images/employer/add.ico</file>
+        <file>images/employer/analytics.ico</file>
+        <file>images/employer/employers.ico</file>
+        <file>images/employer/mail.ico</file>
+        <file>images/employer/manage.ico</file>
+        <file>images/employer/sms.ico</file>
+        <file>images/account/account.ico</file>
+        <file>images/app/AppIcon.png</file>
+        <file>images/app/AppIconIco.ico</file>
+        <file>images/app/logo.png</file>
+        <file>images/buttons/add-list.ico</file>
+        <file>images/buttons/delete.ico</file>
+        <file>images/buttons/excel.ico</file>
+        <file>images/buttons/id-card.ico</file>
+        <file>images/buttons/pdf.ico</file>
+        <file>images/buttons/png.ico</file>
+        <file>images/buttons/qr-code.ico</file>
+        <file>images/buttons/refresh.ico</file>
+        <file>images/buttons/upload.ico</file>
+        <file>images/clients/bill.ico</file>
+        <file>images/clients/calendar.ico</file>
+        <file>images/clients/clients.ico</file>
+        <file>images/clients/debit.ico</file>
+        <file>images/eye/hide.ico</file>
+        <file>images/eye/show.ico</file>
+        <file>images/login/login.ico</file>
+        <file>images/message box/correct.ico</file>
+        <file>images/message box/cross.ico</file>
+        <file>images/notifications/add.ico</file>
+        <file>images/notifications/bell.ico</file>
+        <file>images/notifications/notification.ico</file>
+        <file>images/notifications/notification_red.ico</file>
+        <file>images/search bar/loupe.ico</file>
+        <file>images/logo.png</file>
+        <file>images/logo-removebg-preview.png</file>
+    </qresource>
+</RCC>

@@ -10,8 +10,8 @@ class clients
 {
 public:
     clients();
-    clients(int, QString, QString, QString, QString, QString, QString, QString, QDate,QString,QString);
-    clients(QString, QString, QString, QString, QString, QString, QString, QDate,QString,QString);
+    clients(int, QString, QString, QString, QString, QString, QString, QString, QDate,QString,QString,QString);
+    clients(QString, QString, QString, QString, QString, QString, QString, QDate,QString,QString,QString);
 
     // Getters et Setters
     int getIdClient() const { return id_client; }
@@ -47,6 +47,9 @@ public:
     QString getSEXE() const { return sexe; }
     void setSEXE(QString sexe) { this->sexe = sexe; }
 
+    QString getCIN() const { return cin; }
+    void setCIN(QString cin) { this->cin = cin; }
+
     // CRUD
     bool ajouter();
     QSqlQueryModel* afficher();
@@ -70,6 +73,7 @@ private:
     QString role;
     QDate date_naissance;
     QString sexe;
+    QString cin;
 
 };
 

@@ -14,9 +14,10 @@ clients::clients()
     gouvernorat = "";
     delegation = "";
     date_naissance = QDate::currentDate();
+    cin="";
 }
 
-clients::clients(int id_client, QString nom, QString prenom, QString email, QString telephone, QString adresse, QString gouvernorat, QString delegation, QDate date_naissance,QString role,QString sexe)
+clients::clients(int id_client, QString nom, QString prenom, QString email, QString telephone, QString adresse, QString gouvernorat, QString delegation, QDate date_naissance,QString role,QString sexe,QString cin)
 {
     this->id_client = id_client;
     this->nom = nom;
@@ -29,9 +30,10 @@ clients::clients(int id_client, QString nom, QString prenom, QString email, QStr
     this->date_naissance = date_naissance;
     this->role = role;
     this->sexe=sexe;
+    this->cin=cin;
 }
 
-clients::clients( QString nom, QString prenom, QString email, QString telephone, QString adresse, QString gouvernorat, QString delegation, QDate date_naissance,QString role,QString sexe)
+clients::clients( QString nom, QString prenom, QString email, QString telephone, QString adresse, QString gouvernorat, QString delegation, QDate date_naissance,QString role,QString sexe,QString cin)
 {
     this->nom = nom;
     this->prenom = prenom;
@@ -43,14 +45,15 @@ clients::clients( QString nom, QString prenom, QString email, QString telephone,
     this->date_naissance = date_naissance;
     this->role = role;
     this->sexe=sexe;
+    this->cin=cin;
 }
 
 bool clients::ajouter()
 {
     QSqlQuery query;
 
-    query.prepare("INSERT INTO CLIENTS (Nom, Prenom, Email, Telephone, Adresse, DATE_DE_NAISSANCE,Gouvernorat, Delegation,SEXE) "
-                  "VALUES (:Nom, :Prenom, :Email, :Telephone, :Adresse, :DATE_DE_NAISSANCE, :Gouvernorat, :Delegation,:SEXE)");
+    query.prepare("INSERT INTO CLIENTS (Nom, Prenom, Email, Telephone, Adresse, DATE_DE_NAISSANCE,Gouvernorat, Delegation,SEXE,CIN) "
+                  "VALUES (:Nom, :Prenom, :Email, :Telephone, :Adresse, :DATE_DE_NAISSANCE, :Gouvernorat, :Delegation,:SEXE,:CIN)");
 
     query.bindValue(":Nom", nom);
     query.bindValue(":Prenom", prenom);
@@ -61,6 +64,7 @@ bool clients::ajouter()
     query.bindValue(":Delegation", delegation);
     query.bindValue(":DATE_DE_NAISSANCE", date_naissance);
     query.bindValue(":SEXE", sexe);
+    query.bindValue(":CIN", cin);
 
     return query.exec();
 }
@@ -98,7 +102,7 @@ bool clients::modifier()
 {
     QSqlQuery query;
 
-    query.prepare("UPDATE CLIENTS SET Nom = :Nom, Prenom = :Prenom, Email = :Email, Telephone = :Telephone, Adresse = :Adresse, DATE_DE_NAISSANCE = :DATE_DE_NAISSANCE , Gouvernorat = :Gouvernorat, Delegation = :Delegation,SEXE= :SEXE WHERE ID_Client = :ID_Client");
+    query.prepare("UPDATE CLIENTS SET Nom = :Nom, Prenom = :Prenom, Email = :Email, Telephone = :Telephone, Adresse = :Adresse, DATE_DE_NAISSANCE = :DATE_DE_NAISSANCE , Gouvernorat = :Gouvernorat, Delegation = :Delegation,SEXE= :SEXE,CIN=:CIN WHERE ID_Client = :ID_Client");
     query.bindValue(":ID_Client", id_client);
     query.bindValue(":Nom", nom);
     query.bindValue(":Prenom", prenom);
@@ -109,6 +113,7 @@ bool clients::modifier()
     query.bindValue(":Delegation", delegation);
     query.bindValue(":DATE_DE_NAISSANCE", date_naissance);
     query.bindValue(":SEXE", sexe);
+    query.bindValue(":CIN", cin);
 
     return query.exec();
 }
@@ -129,7 +134,7 @@ QSqlQueryModel* clients::tri(QString column, QString choix)
 
 int clients::CountSEXE(QString sexe)
 {
-    
+
     int count = 0;
 
     QSqlQuery query;
@@ -141,7 +146,7 @@ int clients::CountSEXE(QString sexe)
     }
 
     return count;
-    
+
 }
 
 

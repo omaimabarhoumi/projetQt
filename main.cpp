@@ -1,32 +1,25 @@
 #include "mainwindow.h"
-
-#include <QApplication>
 #include <QMessageBox>
-#include "connexion.h"
-#include <QPointer>
+#include "connection.h"
+#include <QApplication>
+
 int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
-        Connexion c;
+{ QApplication a(argc, argv);
 
-      bool test=c.createconnexion();
-  MainWindow w;
-        if(test)
-        {w.show();
+    Connection connection;
+     bool test=connection.createconnection();
+     MainWindow w;
+     if (test){ QMessageBox::information (nullptr, QObject::tr("OK"),
+                                          QObject::tr("Connection a la base de donnée etablie \n"
+                                         "Click Cancel to exit."), QMessageBox::Ok);
 
-            QMessageBox::information(nullptr, QObject::tr("database is  open"),
-                        QObject::tr("connection succefull.\n"
-                                    "Click Cancel to exit."), QMessageBox::Cancel);
+      w.show();
+     }
+     else{
+         QMessageBox::information (nullptr, QObject::tr("Not OK"),
+                                    QObject::tr("err : connection n'est pas etablie  \n"
+                                   "Click Cancel to exit."), QMessageBox::Cancel);
+     };
 
-
-
-    }
-        else
-            QMessageBox::critical(nullptr, QObject::tr("database is not open"),
-                        QObject::tr("connection failed.\n"
-                                    "Click Cancel to exit."), QMessageBox::Cancel);
-
-
-    w.show();
     return a.exec();
 }
