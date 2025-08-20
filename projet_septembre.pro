@@ -19,18 +19,18 @@ SOURCES += \
     clients.cpp \
     commandes.cpp \
     connection.cpp \
-    employer.cpp \
     main.cpp \
     mainwindow.cpp \
-    message.cpp
+    QrCode.cpp \
+    email.cpp
 
 HEADERS += \
     clients.h \
     commandes.h \
     connection.h \
-    employer.h \
     mainwindow.h \
-    message.h
+    QrCode.hpp \
+    email.h
 
 FORMS += \
     mainwindow.ui

@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include"employer.h"
 #include <QTimer>
 #include <QObject>
 #include "clients.h"
@@ -20,30 +19,10 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_addButton_2_clicked();
 
-    void on_lineEdit_74_textChanged(const QString &arg1);
 
-    void on_updateButton_2_clicked();
-
-    void on_deleteButton_2_clicked();
-
-    void on_pushButton_42_clicked();
 
     void on_pushButton_9_clicked();
-
-    void on_pushButton_clicked();
-
-    void on_pushButton_40_clicked();
-    void gethistoriquemessage(int id);
-    void getdesscution(int autherid);
-   bool eventFilter(QObject* obj, QEvent* event);
-
-   void on_sendbtn_clicked();
-   void getcontacte(QSqlQueryModel* model);
-   void on_lineEdit_textChanged(const QString &arg1);
-
-   void on_pushButton_60_clicked();
 
    void on_addButton_client_clicked();
 
@@ -82,11 +61,16 @@ private slots:
 
    void on_stat_commande_clicked();
 
+   void on_bt_client_log_out_clicked();
+
+   void on_bt_commande_log_out_clicked();
+
+   void on_QrCode_commande_clicked();
+
 private:
     Ui::MainWindow *ui;
-    Employer empo;
     QWidget gestemp;
-    int Idconnected;
+    QString Role;
     QTimer* timer;
 
     clients c;

@@ -65,6 +65,11 @@ public:
     int chercherIdClient(QString FullNameClient);
     QString chercherNomPrenomById(int ID_client);
 
+
+    //login
+    QString connexion(QString email, QString password) ;
+    QMap<QString,QString> GetNomAndPrenom(QString email,QString cin,QString ROLE);
+
 private:
     int id_client;
     QString nom;

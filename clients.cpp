@@ -2,7 +2,7 @@
 #include <QSqlQueryModel>
 #include <QSqlQuery>
 #include <QDate>
-
+#include <QList>
 clients::clients()
 {
     id_client = 0;
@@ -214,4 +214,65 @@ QString clients::chercherNomPrenomById(int ID_client)
     }
 
 return id;
+}
+
+QString clients::connexion(QString email, QString cin) { // oumaima.barhoumi@esprit.tn    ::  87654321
+    QSqlQuery query;
+
+
+    query.prepare("SELECT CIN, ROLE FROM CLIENTS WHERE EMAIL = :email AND ROLE != 'CLIENT'");
+    query.bindValue(":email", email);
+
+    if (query.exec() && query.next()) {
+        //CIN= 87654321
+
+        QString storedPassword = query.value("CIN").toString();
+
+        // Check if the password matches
+        if (cin == storedPassword) {
+            return query.value("ROLE").toString(); // Return the role
+            //ROLE=CLIENT
+        }
+    }
+
+    //livreur
+    query.prepare("SELECT CIN FROM LIVREURS WHERE EMAIL = :email");
+    query.bindValue(":email", email);
+
+    if (query.exec() && query.next()) {
+        //CIN= 87654321
+
+        QString storedPassword = query.value("CIN").toString();
+
+        // Check if the password matches
+        if (cin == storedPassword) {
+            return "LIVREUR"; // Return the role
+        }
+    }
+
+    return QString(); // Return null (empty QString) if login fails
+}
+
+QMap<QString, QString> clients::GetNomAndPrenom(QString email, QString cin, QString ROLE) {
+    QSqlQuery query;
+    QMap<QString, QString> liste;
+
+    if (ROLE == "LIVREUR") {
+        query.prepare("SELECT NOM, PRENOM FROM LIVREURS WHERE EMAIL = :email AND CIN = :cin");
+    } else {
+        query.prepare("SELECT NOM, PRENOM FROM CLIENTS WHERE EMAIL = :email AND CIN = :cin");
+    }
+
+    query.bindValue(":email", email);
+    query.bindValue(":cin", cin);
+
+    if (query.exec() && query.next()) {
+        QString nom = query.value(0).toString();
+        QString prenom = query.value(1).toString();
+
+        liste.insert("nom", nom);
+        liste.insert("prenom", prenom);
+    }
+
+    return liste;
 }
