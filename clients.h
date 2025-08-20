@@ -60,6 +60,10 @@ public:
     QSqlQueryModel* chercher(QString column, QString text);
     QSqlQueryModel* tri(QString column, QString choix);
     int CountSEXE(QString sexe);
+    QMap<QString, int> statistiquesParGouvernorat() ;
+    QList<QString> Liste_Client();
+    int chercherIdClient(QString FullNameClient);
+    QString chercherNomPrenomById(int ID_client);
 
 private:
     int id_client;

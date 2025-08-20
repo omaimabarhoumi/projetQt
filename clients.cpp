@@ -150,5 +150,68 @@ int clients::CountSEXE(QString sexe)
 }
 
 
+QMap<QString, int> clients::statistiquesParGouvernorat() {
+    QMap<QString, int> GouvernoratStats;
+
+    QSqlQuery query;
+    query.prepare("SELECT Gouvernorat, COUNT(*) as count FROM CLIENTS GROUP BY Gouvernorat");
+
+    if (query.exec()) {
+        while (query.next()) {
+            QString Gouvernorat= query.value(0).toString();
+            int count = query.value(1).toInt();
+            GouvernoratStats[Gouvernorat] = count;
+        }
+    }
+
+    return GouvernoratStats;
+}
 
 
+QList<QString> clients::Liste_Client()
+{
+QSqlQuery query;
+QList<QString> liste;
+query.prepare("SELECT nom || ' ' || prenom FROM Clients");
+if(query.exec())
+{
+ while(query.next())
+ {
+  QString fullName=query.value(0).toString();
+  liste.append(fullName);
+ }
+}
+return liste ;
+
+}
+
+
+int clients::chercherIdClient(QString FullNameClient)
+{
+    int id=0;
+
+    QSqlQuery query;
+    query.prepare("SELECT ID_CLIENT from CLIENTS where nom || ' ' || prenom   =:FullNameClient") ;
+    query.bindValue(":FullNameClient",FullNameClient);
+    if(query.exec() && query.next())
+    {
+        id=query.value(0).toInt();
+    }
+
+return id;
+}
+
+QString clients::chercherNomPrenomById(int ID_client)
+{
+    QString id;
+
+    QSqlQuery query;
+    query.prepare("SELECT nom || ' ' || prenom  from CLIENTS where  ID_CLIENT =:ID_client") ;
+    query.bindValue(":ID_client",ID_client);
+    if(query.exec() && query.next())
+    {
+        id=query.value(0).toString();
+    }
+
+return id;
+}

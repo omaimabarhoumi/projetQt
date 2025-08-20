@@ -10,7 +10,8 @@ class Commandes
 {
 public:
     Commandes();
-    Commandes(int, int, int, QDate, QString, QString, int);
+    Commandes(int, int, int, QDate, QString, QString,QString , int);
+    Commandes( int, int, QDate, QString, QString,QString , int);
 
     // Getters et Setters
     int getIdCommande() const { return id_commande; }
@@ -42,11 +43,16 @@ public:
     QSqlQueryModel* afficher();
     bool supprimer(int id);
     bool idExists(int id);
-    bool modifier(int, int, int, QDate, QString, QString, int);
+    bool modifier();
     //Metier
     QSqlQueryModel* chercher(QString column, QString text);
     QSqlQueryModel* tri(QString column, QString choix);
     int countStatut(const QString& statut);
+
+    QList<QString> Liste_Livreur();
+    int chercherIdLivreur(QString FullNameLivreur);
+    QString chercherNomPrenomById(int ID_livreur);
+    QMap<QString, int> statistiquesParSatut() ;
 
 private:
     int id_commande;

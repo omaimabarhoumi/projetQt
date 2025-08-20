@@ -16,6 +16,7 @@
 #include <QtCharts/QChart>
 #include <QIntValidator>
 #include <QRegularExpressionValidator>
+#include <QPrinter>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -36,6 +37,8 @@ MainWindow::MainWindow(QWidget *parent)
         QIntValidator *intValidator = new QIntValidator(0, 1000000000, this); // Only allows integers from 0 to 100000
           ui->cin_client->setValidator(intValidator);
           ui->telephone_client->setValidator(intValidator);
+          ui->prix_totale->setValidator(intValidator);
+
 //lors du l'execution , en applique un condition sur ui->nom_client et ui->prenom_client juste charactere
           QRegularExpressionValidator *charValidator = new QRegularExpressionValidator(QRegularExpression("[A-Za-z]*"), this);
 ui->prenom_client->setValidator(charValidator);
@@ -55,6 +58,16 @@ QStringList gouvernorats = {
 // Remplir le QComboBox
 ui->gouvernorat_client->addItems(gouvernorats);
 
+
+
+//commandes
+
+remplir_comboBox_livreur();
+remplir_comboBox_client();
+ui->tableView_commande->setModel(co.afficher());
+
+ui->id_commande->hide();
+ui->id_client->hide();
 }
 
 MainWindow::~MainWindow()
@@ -587,10 +600,18 @@ if(test)
     QMessageBox::information(nullptr, QObject::tr(""),
                           QObject::tr("Ajout avec succés"), QMessageBox::Cancel);
 
-
-
+ui->nom_client->clear();
+ui->prenom_client->clear();
+ui->naissance_client->clear();
+ui->email_client->clear();
+ui->telephone_client->clear();
+ui->cin_client->clear();
+ui->adresse_client->clear();
+ui->id_client->clear();
 //refresh lel tableView
 ui->tableView_client->setModel(c.afficher());
+
+remplir_comboBox_client();
 }
 else
 {
@@ -744,6 +765,11 @@ void MainWindow::on_updateButton_client_clicked()
     QString delegation=ui->delegation_client->currentText();
 
     //Etape2:Controle de Saisie
+    if(id_client==0)
+    {
+        QMessageBox::warning(this, "Erreur", "Tu dois chosir une ligne d'apres le tableau !");
+        return;
+    }
 if(nom==""||prenom==""||telephone==""||cin==""||email==""||adresse=="")
 {
     QMessageBox::warning(this, "Erreur", "Tu dois remplir tous les champs !");
@@ -774,8 +800,15 @@ if(test)
 
     QMessageBox::information(nullptr, QObject::tr(""),
                           QObject::tr("Modification avec succés"), QMessageBox::Cancel);
-
-
+    remplir_comboBox_client();
+    ui->nom_client->clear();
+    ui->prenom_client->clear();
+    ui->naissance_client->clear();
+    ui->email_client->clear();
+    ui->telephone_client->clear();
+    ui->cin_client->clear();
+    ui->adresse_client->clear();
+    ui->id_client->clear();
 
 //refresh lel tableView
 ui->tableView_client->setModel(c.afficher());
@@ -791,13 +824,15 @@ else
 void MainWindow::on_deleteButton_client_clicked()
 {
     int id=ui->id_client->text().toInt();
-    if(!c.idExists(id))
+
+    if(id==0)
     {
-        QMessageBox::critical(nullptr, QObject::tr(""),
-                                   QObject::tr("id n'existe pas ."), QMessageBox::Cancel);
+        QMessageBox::warning(this, "Erreur", "Tu dois chosir une ligne d'apres le tableau !");
+        return;
     }
     else
-    {
+       {
+
     bool test=c.supprimer(id);
      QMessageBox msgBox;
     if(test)
@@ -805,6 +840,15 @@ void MainWindow::on_deleteButton_client_clicked()
         {QMessageBox::information(nullptr, QObject::tr(""),
                                QObject::tr("suppresion avec succes."), QMessageBox::Cancel);}
                ui->tableView_client->setModel(c.afficher());
+    remplir_comboBox_client();
+    ui->nom_client->clear();
+    ui->prenom_client->clear();
+    ui->naissance_client->clear();
+    ui->email_client->clear();
+    ui->telephone_client->clear();
+    ui->cin_client->clear();
+    ui->adresse_client->clear();
+    ui->id_client->clear();
 
          }
          else
@@ -812,5 +856,453 @@ void MainWindow::on_deleteButton_client_clicked()
                                     QObject::tr("echec de suppresion."), QMessageBox::Cancel);}
 
     }
+}
+
+
+void MainWindow::on_bt_tri_client_clicked()
+{
+    QString ordre=ui->ordre_client->currentText();
+    QString choix=ui->choix_client->currentText();
+    if(ordre=="ASCENDANT")
+    {
+ui->tableView_client->setModel(c.tri(choix,"ASC"));
+    }
+    else
+    {
+        ui->tableView_client->setModel(c.tri(choix,"DESC"));
+    }
+}
+
+
+void MainWindow::on_chercher_client_textChanged(const QString &text)
+{
+    QString choix=ui->choix_client->currentText();
+    ui->tableView_client->setModel(c.chercher(choix,text));
+
+}
+
+//ETAPE1:  numero ligne et column du table !
+//etape 2: creation du code html et css ! varaibale out !
+//etape 3: creation du table dans le html , header !  variable out fih les donnes lkol mta tableau
+//etape 4:Qfile Dialog , sna3na fichier pdf et lien
+//etpae 5 :  insertion du varaibale out (html) dans le fichier pdf d'apres le lien
+void MainWindow::on_pdf_client_clicked()
+{
+    QString strStream;
+    QTextStream out(&strStream);
+
+    const int rowCount = ui->tableView_client->model()->rowCount();
+    const int columnCount = ui->tableView_client->model()->columnCount();
+
+    out << "<html>\n"
+           "<head>\n"
+           "<meta Content=\"Text/html; charset=Windows-1251\">\n"
+           "<title>%1</title>\n"
+           "<style>\n"
+           "table {\n"
+           "    width: 100%;\n"
+           "    border-collapse: collapse;\n"
+           "}\n"
+           "th, td {\n"
+           "    padding: 8px;\n"
+           "    text-align: left;\n"
+           "    border-bottom: 1px solid #ddd;\n"
+           "}\n"
+           "tr:nth-child(even) {\n"
+           "    background-color: #f2f2f2;\n"
+           "}\n"
+           "</style>\n"
+           "</head>\n"
+           "<body bgcolor=#ffffff link=#5000A0>\n"
+           "<center> <H1>Liste des Clients</H1></center><br/><br/>\n"
+           "<img src=\"path/to/your/image.jpg\" alt=\"Description of image\" style=\"max-width: 100%; height: auto;\">\n"
+           "<table>\n";
+
+    // headers
+    out << "<thead><tr bgcolor=#f0f0f0> <th>Numero</th>";
+    for (int column = 0; column < columnCount; column++)
+    {
+        if (!ui->tableView_client->isColumnHidden(column))
+        {
+            out << QString("<th>%1</th>").arg(ui->tableView_client->model()->headerData(column, Qt::Horizontal).toString());
+        }
+    }
+    out << "</tr></thead>\n";
+
+    // data table
+    for (int row = 0; row < rowCount; row++)//ligne
+    {
+        out << "<tr> <td>" << row + 1 << "</td>";
+        for (int column = 0; column < columnCount; column++)
+        {
+            if (!ui->tableView_client->isColumnHidden(column))
+            {
+                QString data = ui->tableView_client->model()->data(ui->tableView_client->model()->index(row, column)).toString().simplified();
+                out << QString("<td>%1</td>").arg((!data.isEmpty()) ? data : QString("&nbsp;"));
+            }
+        }
+        out << "</tr>\n";
+    }
+
+
+
+    QString fileName = QFileDialog::getSaveFileName((QWidget *)0, "Sauvegarder en PDF", QString(), "*.pdf");
+    if (QFileInfo(fileName).suffix().isEmpty())
+    {
+        fileName.append(".pdf");
+    }
+
+    QPrinter printer(QPrinter::PrinterResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setPageSize(QPageSize::A4);
+    printer.setOutputFileName(fileName);
+
+    QTextDocument doc;
+    doc.setHtml(strStream);
+    doc.print(&printer);
+
+}
+
+
+
+void MainWindow::on_stat_client_clicked()
+{
+    QMap<QString, int> stats = c.statistiquesParGouvernorat();
+
+         QPieSeries *series = new QPieSeries();
+         for (auto it = stats.begin(); it != stats.end(); ++it) {
+             series->append(it.key(), it.value());
+         }
+
+         QChart *chart = new QChart();
+         chart->addSeries(series);
+         chart->setTitle("Statistiques des clients par gouvernorat");
+
+         QChartView *chartView = new QChartView(chart);
+         chartView->setRenderHint(QPainter::Antialiasing);
+
+         QDialog *chartDialog = new QDialog(this);
+         chartDialog->setWindowTitle("Graphique des Statistiques");
+         chartDialog->setFixedSize(600, 400);
+         QVBoxLayout *layout = new QVBoxLayout();
+         layout->addWidget(chartView);
+         chartDialog->setLayout(layout);
+
+         chartDialog->exec();
+}
+
+
+void MainWindow::remplir_comboBox_livreur()
+{
+    ui->comboBox_livreur->clear();
+    QList<QString> liste = co.Liste_Livreur();
+
+    for (int i = 0; i < liste.length(); i++)
+    {
+        ui->comboBox_livreur->addItem(liste[i]);
+    }
+}
+
+void MainWindow::remplir_comboBox_client()
+{
+    ui->comboBox_client->clear();
+    QList<QString> liste = c.Liste_Client();
+
+    for (int i = 0; i < liste.length(); i++)
+    {
+        ui->comboBox_client->addItem(liste[i]);
+    }
+}
+
+
+void MainWindow::on_addButton_commande_clicked()
+{
+   QString type= ui->type_produit->text();
+   QString nom=ui->nom_produit->text();
+   int prix=ui->prix_totale->text().toInt();
+   QString FullNameLivreur=ui->comboBox_livreur->currentText();
+   QString FullNameClient=ui->comboBox_client->currentText();
+
+if(type==""||nom==""||prix==0)
+{
+    QMessageBox::warning(nullptr, QObject::tr(""),
+                          QObject::tr("Tu dois remplir tous les champs"), QMessageBox::Cancel);
+    return;
+}
+
+if(prix<0)
+   {
+    QMessageBox::warning(nullptr, QObject::tr(""),
+                          QObject::tr("Le prix doit etre positif"), QMessageBox::Cancel);
+    return;
+
+}
+
+int id_livreur=co.chercherIdLivreur(FullNameLivreur);
+int id_client=c.chercherIdClient(FullNameClient);
+
+Commandes co(  id_client,  id_livreur,  QDate::currentDate(),  "En attente",  nom,type,  prix);
+bool test =co.ajouter();
+
+if(test)
+{
+    QMessageBox::information(nullptr, QObject::tr(""),
+                          QObject::tr("Ajout avec succées"), QMessageBox::Cancel);
+    ui->tableView_commande->setModel(co.afficher());
+
+    ui->nom_produit->clear();
+    ui->type_produit->clear();
+    ui->prix_totale->clear();
+
+}
+else
+{
+    QMessageBox::warning(nullptr, QObject::tr(""),
+                          QObject::tr("Ajout échoué"), QMessageBox::Cancel);
+
+}
+}
+
+
+void MainWindow::on_tableView_commande_clicked(const QModelIndex &index)
+{
+    //index du ligne
+    QAbstractItemModel* model = ui->tableView_commande->model();
+    int row=index.row();
+//récuperation des case du table d'apres ligne du index !
+    QString id_commande=model->data(model->index(row,0)).toString();
+    int id_client=model->data(model->index(row,1)).toInt();
+    int id_livreur=model->data(model->index(row,2)).toInt();
+    QString date_commande=model->data(model->index(row,3)).toString();
+    QString statut=model->data(model->index(row,4)).toString();
+    QString nom_produit=model->data(model->index(row,5)).toString();
+    QString type_produit=model->data(model->index(row,6)).toString();
+    QString prix_totale=model->data(model->index(row,7)).toString();
+
+
+
+    //insertion dans les lineEdits etc
+ui->id_commande->setText(id_commande);
+ui->nom_produit->setText(nom_produit);
+ui->type_produit->setText(type_produit);
+ui->prix_totale->setText(prix_totale);
+
+QString FullNameLivreur=co.chercherNomPrenomById(id_livreur);
+QString FullNameClient=c.chercherNomPrenomById(id_client);
+        ui->comboBox_client->setCurrentText(FullNameClient);
+        ui->comboBox_livreur->setCurrentText(FullNameLivreur);
+
+}
+
+void MainWindow::on_updateButton_commande_clicked()
+{
+   QString type= ui->type_produit->text();
+   QString nom=ui->nom_produit->text();
+   int prix=ui->prix_totale->text().toInt();
+   QString FullNameLivreur=ui->comboBox_livreur->currentText();
+   QString FullNameClient=ui->comboBox_client->currentText();
+   int id_commande=ui->id_commande->text().toInt();
+
+   if(id_commande==0)
+   {
+       QMessageBox::warning(nullptr, QObject::tr(""),
+                             QObject::tr("Tu dois choisir une ligne d'apres le tableau"), QMessageBox::Cancel);
+       return;
+   }
+if(type==""||nom==""||prix==0)
+{
+    QMessageBox::warning(nullptr, QObject::tr(""),
+                          QObject::tr("Tu dois remplir tous les champs"), QMessageBox::Cancel);
+    return;
+}
+
+if(prix<0)
+   {
+    QMessageBox::warning(nullptr, QObject::tr(""),
+                          QObject::tr("Le prix doit etre positif"), QMessageBox::Cancel);
+    return;
+
+}
+
+int id_livreur=co.chercherIdLivreur(FullNameLivreur);
+int id_client=c.chercherIdClient(FullNameClient);
+Commandes co( id_commande, id_client,  id_livreur,  QDate::currentDate(),  "En attente",  nom,type,  prix);
+bool test =co.modifier();
+
+if(test)
+{
+    QMessageBox::information(nullptr, QObject::tr(""),
+                          QObject::tr("Ajout avec succées"), QMessageBox::Cancel);
+    ui->tableView_commande->setModel(co.afficher());
+
+    ui->nom_produit->clear();
+    ui->type_produit->clear();
+    ui->prix_totale->clear();
+
+}
+else
+{
+    QMessageBox::warning(nullptr, QObject::tr(""),
+                          QObject::tr("Ajout échoué"), QMessageBox::Cancel);
+
+}
+}
+
+
+void MainWindow::on_deleteButton_commande_clicked()
+{
+    int id=ui->id_commande->text().toInt();
+
+    if(id==0)
+    {
+        QMessageBox::warning(this, "Erreur", "Tu dois chosir une ligne d'apres le tableau !");
+        return;
+    }
+    else
+       {
+
+    bool test=co.supprimer(id);
+     QMessageBox msgBox;
+    if(test)
+    {
+        {QMessageBox::information(nullptr, QObject::tr(""),
+                               QObject::tr("suppresion avec succes."), QMessageBox::Cancel);}
+               ui->tableView_commande->setModel(co.afficher());
+
+ui->nom_produit->clear();
+ui->type_produit->clear();
+ui->prix_totale->clear();
+         }
+         else
+             {QMessageBox::critical(nullptr, QObject::tr(""),
+                                    QObject::tr("echec de suppresion."), QMessageBox::Cancel);}
+
+    }
+}
+
+void MainWindow::on_tri_commande_clicked()
+{
+    QString ordre=ui->ordre_commande->currentText();
+    QString choix=ui->choix_commande->currentText();
+    if(ordre=="ASCENDANT")
+    {
+ui->tableView_commande->setModel(co.tri(choix,"ASC"));
+    }
+    else
+    {
+        ui->tableView_commande->setModel(co.tri(choix,"DESC"));
+    }
+}
+
+
+void MainWindow::on_chercher_commande_textChanged(const QString &text)
+{
+    QString choix=ui->choix_commande->currentText();
+    ui->tableView_commande->setModel(co.chercher(choix,text));
+}
+
+
+void MainWindow::on_pdf_commande_clicked()
+{
+    QString strStream;
+    QTextStream out(&strStream);
+
+    const int rowCount = ui->tableView_commande->model()->rowCount();
+    const int columnCount = ui->tableView_commande->model()->columnCount();
+
+    out << "<html>\n"
+           "<head>\n"
+           "<meta Content=\"Text/html; charset=Windows-1251\">\n"
+           "<title>%1</title>\n"
+           "<style>\n"
+           "table {\n"
+           "    width: 100%;\n"
+           "    border-collapse: collapse;\n"
+           "}\n"
+           "th, td {\n"
+           "    padding: 8px;\n"
+           "    text-align: left;\n"
+           "    border-bottom: 1px solid #ddd;\n"
+           "}\n"
+           "tr:nth-child(even) {\n"
+           "    background-color: #f2f2f2;\n"
+           "}\n"
+           "</style>\n"
+           "</head>\n"
+           "<body bgcolor=#ffffff link=#5000A0>\n"
+           "<center> <H1>Liste des Commandes</H1></center><br/><br/>\n"
+           "<img src=\"path/to/your/image.jpg\" alt=\"Description of image\" style=\"max-width: 100%; height: auto;\">\n"
+           "<table>\n";
+
+    // headers
+    out << "<thead><tr bgcolor=#f0f0f0> <th>Numero</th>";
+    for (int column = 0; column < columnCount; column++)
+    {
+        if (!ui->tableView_commande->isColumnHidden(column))
+        {
+            out << QString("<th>%1</th>").arg(ui->tableView_commande->model()->headerData(column, Qt::Horizontal).toString());
+        }
+    }
+    out << "</tr></thead>\n";
+
+    // data table
+    for (int row = 0; row < rowCount; row++)//ligne
+    {
+        out << "<tr> <td>" << row + 1 << "</td>";
+        for (int column = 0; column < columnCount; column++)
+        {
+            if (!ui->tableView_commande->isColumnHidden(column))
+            {
+                QString data = ui->tableView_commande->model()->data(ui->tableView_commande->model()->index(row, column)).toString().simplified();
+                out << QString("<td>%1</td>").arg((!data.isEmpty()) ? data : QString("&nbsp;"));
+            }
+        }
+        out << "</tr>\n";
+    }
+
+
+
+    QString fileName = QFileDialog::getSaveFileName((QWidget *)0, "Sauvegarder en PDF", QString(), "*.pdf");
+    if (QFileInfo(fileName).suffix().isEmpty())
+    {
+        fileName.append(".pdf");
+    }
+
+    QPrinter printer(QPrinter::PrinterResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setPageSize(QPageSize::A4);
+    printer.setOutputFileName(fileName);
+
+    QTextDocument doc;
+    doc.setHtml(strStream);
+    doc.print(&printer);
+
+}
+
+
+void MainWindow::on_stat_commande_clicked()
+{
+    QMap<QString, int> stats = co.statistiquesParSatut();
+
+           QPieSeries *series = new QPieSeries();
+           for (auto it = stats.begin(); it != stats.end(); ++it) {
+               series->append(it.key(), it.value());
+           }
+
+           QChart *chart = new QChart();
+           chart->addSeries(series);
+           chart->setTitle("Statistiques des Commandes par statut");
+
+           QChartView *chartView = new QChartView(chart);
+           chartView->setRenderHint(QPainter::Antialiasing);
+
+           QDialog *chartDialog = new QDialog(this);
+           chartDialog->setWindowTitle("Graphique des Statistiques");
+           chartDialog->setFixedSize(600, 400);
+           QVBoxLayout *layout = new QVBoxLayout();
+           layout->addWidget(chartView);
+           chartDialog->setLayout(layout);
+
+           chartDialog->exec();
 }
 

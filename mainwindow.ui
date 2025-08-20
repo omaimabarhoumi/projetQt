@@ -255,7 +255,7 @@ QSpinBox[readOnly=&quot;true&quot;], QDoubleSpinBox[readOnly=&quot;true&quot;] {
         <enum>QTabWidget::Triangular</enum>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>3</number>
        </property>
        <property name="iconSize">
         <size>
@@ -1070,7 +1070,7 @@ text-decoration: underline;
           </rect>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_3">
+        <widget class="QComboBox" name="choix_client">
          <property name="geometry">
           <rect>
            <x>940</x>
@@ -1081,7 +1081,12 @@ text-decoration: underline;
          </property>
          <item>
           <property name="text">
-           <string>ID</string>
+           <string>ID_CLIENT</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>CIN</string>
           </property>
          </item>
          <item>
@@ -1096,26 +1101,41 @@ text-decoration: underline;
          </item>
          <item>
           <property name="text">
-           <string>DEPARTEMENT</string>
+           <string>EMAIL</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>CIN</string>
+           <string>TELEPHONE</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>SALAIRE</string>
+           <string>DATE_DE_NAISSANCE</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>POSTE</string>
+           <string>GOUVERNORAT</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>DELEGATION</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>ROLE</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>SEXE</string>
           </property>
          </item>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_75">
+        <widget class="QLineEdit" name="chercher_client">
          <property name="geometry">
           <rect>
            <x>590</x>
@@ -1125,7 +1145,7 @@ text-decoration: underline;
           </rect>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="bt_tri_client">
          <property name="geometry">
           <rect>
            <x>1150</x>
@@ -1296,7 +1316,7 @@ text-decoration: underline;
           </item>
          </layout>
         </widget>
-        <widget class="QPushButton" name="pushButton_61">
+        <widget class="QPushButton" name="stat_client">
          <property name="geometry">
           <rect>
            <x>1030</x>
@@ -1342,7 +1362,7 @@ text-decoration: underline;
           </size>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_42">
+        <widget class="QPushButton" name="pdf_client">
          <property name="geometry">
           <rect>
            <x>630</x>
@@ -1357,29 +1377,6 @@ text-decoration: underline;
          <property name="icon">
           <iconset>
            <normaloff>:/images/buttons/pdf.ico</normaloff>:/images/buttons/pdf.ico</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>32</width>
-           <height>32</height>
-          </size>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="pushButton_43">
-         <property name="geometry">
-          <rect>
-           <x>830</x>
-           <y>430</y>
-           <width>171</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>export </string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>:/images/buttons/excel.ico</normaloff>:/images/buttons/excel.ico</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -1416,7 +1413,7 @@ text-decoration: underline;
           <rect>
            <x>600</x>
            <y>30</y>
-           <width>301</width>
+           <width>20</width>
            <height>26</height>
           </rect>
          </property>
@@ -1435,12 +1432,32 @@ text-decoration: underline;
           <set>Qt::AlignCenter</set>
          </property>
         </widget>
+        <widget class="QComboBox" name="ordre_client">
+         <property name="geometry">
+          <rect>
+           <x>940</x>
+           <y>40</y>
+           <width>191</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <item>
+          <property name="text">
+           <string>ASCENDANT</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>DESCENDANT</string>
+          </property>
+         </item>
+        </widget>
        </widget>
        <widget class="QWidget" name="Commande">
         <attribute name="title">
          <string>Commande</string>
         </attribute>
-        <widget class="QComboBox" name="comboBox_7">
+        <widget class="QComboBox" name="choix_commande">
          <property name="geometry">
           <rect>
            <x>960</x>
@@ -1451,37 +1468,42 @@ text-decoration: underline;
          </property>
          <item>
           <property name="text">
-           <string>ID</string>
+           <string>ID_COMMANDE</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>NOM</string>
+           <string>ID_CLIENT</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>PRENOM</string>
+           <string>ID_LIVREUR</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>DEPARTEMENT</string>
+           <string>DATE_COMMANDE</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>CIN</string>
+           <string>STATUT</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>SALAIRE</string>
+           <string>NOM_PRODUIT</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>POSTE</string>
+           <string>TYPE_PRODUIT</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>PRIX_TOTALE</string>
           </property>
          </item>
         </widget>
@@ -1501,7 +1523,7 @@ text-decoration: underline;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_76">
+        <widget class="QLineEdit" name="chercher_commande">
          <property name="geometry">
           <rect>
            <x>610</x>
@@ -1613,7 +1635,7 @@ text-decoration: underline;
           <rect>
            <x>620</x>
            <y>20</y>
-           <width>301</width>
+           <width>20</width>
            <height>26</height>
           </rect>
          </property>
@@ -1655,7 +1677,7 @@ text-decoration: underline;
           </size>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_62">
+        <widget class="QPushButton" name="stat_commande">
          <property name="geometry">
           <rect>
            <x>1050</x>
@@ -1701,30 +1723,7 @@ text-decoration: underline;
           </size>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_44">
-         <property name="geometry">
-          <rect>
-           <x>850</x>
-           <y>420</y>
-           <width>171</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>export </string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>:/images/buttons/excel.ico</normaloff>:/images/buttons/excel.ico</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>32</width>
-           <height>32</height>
-          </size>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="tri_commande">
          <property name="geometry">
           <rect>
            <x>1170</x>
@@ -1786,7 +1785,7 @@ text-decoration: underline;
           </size>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_45">
+        <widget class="QPushButton" name="pdf_commande">
          <property name="geometry">
           <rect>
            <x>650</x>
@@ -1808,6 +1807,26 @@ text-decoration: underline;
            <height>32</height>
           </size>
          </property>
+        </widget>
+        <widget class="QComboBox" name="ordre_commande">
+         <property name="geometry">
+          <rect>
+           <x>960</x>
+           <y>20</y>
+           <width>191</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <item>
+          <property name="text">
+           <string>ASCENDANT</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>DESCENDANT</string>
+          </property>
+         </item>
         </widget>
        </widget>
       </widget>

@@ -15,7 +15,7 @@ Commandes::Commandes()
     prix_totale = 0;
 }
 
-Commandes::Commandes(int id_commande, int id_client, int id_livreur, QDate date_commande, QString statut, QString nom_produit, int prix_totale)
+Commandes::Commandes(int id_commande, int id_client, int id_livreur, QDate date_commande, QString statut, QString nom_produit,QString type_produit, int prix_totale)
 {
     this->id_commande = id_commande;
     this->id_client = id_client;
@@ -24,6 +24,19 @@ Commandes::Commandes(int id_commande, int id_client, int id_livreur, QDate date_
     this->statut = statut;
     this->nom_produit = nom_produit;
     this->prix_totale = prix_totale;
+    this->type_produit=type_produit;
+}
+
+Commandes::Commandes( int id_client, int id_livreur, QDate date_commande, QString statut, QString nom_produit,QString type_produit, int prix_totale)
+{
+    this->id_client = id_client;
+    this->id_livreur = id_livreur;
+    this->date_commande = date_commande;
+    this->statut = statut;
+    this->nom_produit = nom_produit;
+    this->prix_totale = prix_totale;
+    this->type_produit=type_produit;
+
 }
 
 bool Commandes::ajouter()
@@ -73,16 +86,14 @@ bool Commandes::idExists(int id)
     return false;
 }
 
-bool Commandes::modifier(int id_commande, int id_client, int id_livreur, QDate date_commande, QString statut, QString nom_produit, int prix_totale)
+bool Commandes::modifier()
 {
     QSqlQuery query;
 
-    query.prepare("UPDATE COMMANDES SET ID_Client = :ID_Client, ID_Livreur = :ID_Livreur, Date_Commande = :Date_Commande, Statut = :Statut, Nom_Produit = :Nom_Produit, Type_Produit = :Type_Produit, Prix_Totale = :Prix_Totale WHERE ID_Commande = :ID_Commande");
+    query.prepare("UPDATE COMMANDES SET ID_Client = :ID_Client, ID_Livreur = :ID_Livreur, Nom_Produit = :Nom_Produit, Type_Produit = :Type_Produit, Prix_Totale = :Prix_Totale WHERE ID_Commande = :ID_Commande");
     query.bindValue(":ID_Commande", id_commande);
     query.bindValue(":ID_Client", id_client);
     query.bindValue(":ID_Livreur", id_livreur);
-    query.bindValue(":Date_Commande", date_commande);
-    query.bindValue(":Statut", statut);
     query.bindValue(":Nom_Produit", nom_produit);
     query.bindValue(":Type_Produit", type_produit);
     query.bindValue(":Prix_Totale", prix_totale);
@@ -117,4 +128,66 @@ int Commandes::countStatut(const QString& statut)
     }
 
     return count;
+}
+
+QList<QString> Commandes::Liste_Livreur()
+{
+QSqlQuery query;
+QList<QString> liste;
+query.prepare("SELECT nom || ' ' || prenom FROM LIVREURS");
+if(query.exec())
+{
+ while(query.next())
+ {
+  QString fullName=query.value(0).toString();
+  liste.append(fullName);
+ }
+}
+return liste ;
+
+}
+
+int Commandes::chercherIdLivreur(QString FullNameLivreur)
+{
+    int id=0;
+
+    QSqlQuery query;
+    query.prepare("SELECT ID_LIVREUR from LIVREURS where nom || ' ' || prenom   =:FullnameLivreur") ;
+    query.bindValue(":FullnameLivreur",FullNameLivreur);
+    if(query.exec() && query.next())
+    {
+        id=query.value(0).toInt();
+    }
+
+return id;
+}
+QString Commandes::chercherNomPrenomById(int ID_livreur)
+{
+    QString id=0;
+
+    QSqlQuery query;
+    query.prepare("SELECT nom || ' ' || prenom  from LIVREURS where  ID_LIVREUR =:ID_livreur") ;
+    query.bindValue(":ID_livreur",ID_livreur);
+    if(query.exec() && query.next())
+    {
+        id=query.value(0).toString();
+    }
+
+return id;
+}
+QMap<QString, int> Commandes::statistiquesParSatut() {
+    QMap<QString, int> StatutStats;
+
+    QSqlQuery query;
+    query.prepare("SELECT STATUT, COUNT(*) as count FROM COMMANDES GROUP BY STATUT");
+
+    if (query.exec()) {
+        while (query.next()) {
+            QString STATUT= query.value(0).toString();
+            int count = query.value(1).toInt();
+            StatutStats[STATUT] = count;
+        }
+    }
+
+    return StatutStats;
 }
